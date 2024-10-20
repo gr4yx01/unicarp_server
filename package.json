@@ -1,0 +1,19 @@
+{
+  "name": "unicarp_server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:gr4yx01/unicarp_server.git",
+  "author": "asahelcode <hoyx0101@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "express": "^4.21.1",
+    "prisma": "^5.21.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

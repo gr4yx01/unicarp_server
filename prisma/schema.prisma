@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AcademicLevel {
+  ONEHUNDRED
+  TWOHUNDRED
+  THREEHUNDRED
+  FOURHUNDRED
+  FIVEHUNDRED
+  SIXHUNDRED
+}
+
+enum GroupVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum Role {
+  STUDENT
+  PRO
+}
+
+enum GroupStatus {
+  BANNED
+  REMOVED
+}
+
+model Faculty {
+  id String @id @default(cuid())
+  name String
+  users User[]
+  departments Department[]
+}
+
+model Department {
+  id String @id @default(cuid())
+  name String
+  users User[]
+  faculty Faculty @relation(fields: [facultyId], references: [id])
+  facultyId String
+}
+
+model User {
+  id       String   @id @default(cuid())
+  email     String   @unique
+  faculty      Faculty @relation(fields: [facultyId], references: [id])
+  department   Department @relation(fields: [departmentId], references: [id])
+  facultyId  String
+  departmentId  String
+  createdAt DateTime @default(now())
+  academicLevel AcademicLevel
+  hashPassword String
+  role Role
+}
+
+model Admin {
+  id  String  @id @default(cuid())
+  email String
+  hashPassword  String
+}
+
+model Group {
+  id String @id @default(cuid())
+  name String @unique
+  visibility GroupVisibility
+  description String
+  messages Message[]
+}
+
+model GroupMember {
+  id String @id @default(cuid())
+  groupId String
+  userId String
+  joined DateTime @default(now())
+  role Role
+  status GroupStatus
+}
+
+model Message {
+  id String @id @default(cuid())
+  text String
+  created_at DateTime @default(now())
+  group Group @relation(fields: [groupId], references: [id])
+  groupId String
+}
