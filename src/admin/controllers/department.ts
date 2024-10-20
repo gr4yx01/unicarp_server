@@ -5,6 +5,21 @@ const createDepartment = async (req: Request, res: Response) => {
     const { name, facultyId } = req.body
 
     try {
+
+        const departmentExist = await prisma.department.findFirst({
+            where: {
+                name,
+                facultyId
+            }
+        })
+
+        if(departmentExist) {
+            res.status(409).json({
+                message: 'Department already exists'
+            })
+            return;
+        }
+
         const department = await prisma.department.create({
             data: {
                 name,
@@ -23,9 +38,6 @@ const createDepartment = async (req: Request, res: Response) => {
     }
 }
 
-const fetchDepartments = (req: Request, res: Response) => {
-    res.send('edit department')
-}
 
 const deleteDepartment = (req: Request, res: Response) => {
     res.send('delete department')
@@ -33,6 +45,5 @@ const deleteDepartment = (req: Request, res: Response) => {
 
 export {
     createDepartment,
-    fetchDepartments,
     deleteDepartment
 }

@@ -16,6 +16,28 @@ const getAllFaculty = async (req: Request, res: Response) => {
     }
 }
 
+const getFacultyDepartments = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        const faculty = await prisma.department.findMany({
+            where: {
+                facultyId: id
+            }
+        })
+
+        res.status(200).json({
+            message: 'Faculties',
+            data: faculty
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
+
 const createFaculty = async (req: Request, res: Response) => {
     const body = req.body
 
@@ -39,5 +61,6 @@ const createFaculty = async (req: Request, res: Response) => {
 
 export {
     getAllFaculty,
-    createFaculty
+    createFaculty,
+    getFacultyDepartments
 }

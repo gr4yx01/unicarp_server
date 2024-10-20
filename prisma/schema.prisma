@@ -78,7 +78,7 @@ model Admin {
 model Group {
   id String @id @default(cuid())
   name String @unique
-  visibility GroupVisibility
+  visibility GroupVisibility @default(PUBLIC)
   description String
   messages Message[]
   notifications Notification[]

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { acceptRequest, banMember, createGroup, deleteGroup, editGroup, fetchGroups, groupDashboard, groupMembers, groupMessages, membershipRequests, rejectRequest, removeMember } from "../controllers/group";
+import { isPublicRelationOfficer } from "../../middleware/user";
 
 const groupRouter = Router()
 
 //create group
-groupRouter.post('/', createGroup)
+groupRouter.post('/', isPublicRelationOfficer,  createGroup)
 
 //enter group dashboard
 groupRouter.post('/', groupDashboard)
@@ -17,9 +18,9 @@ groupRouter.get('/', fetchGroups)
 groupRouter.delete('/:id', deleteGroup)
 
 //PRO
-groupRouter.get('/:id', groupMembers)
+groupRouter.get('/:id/members', groupMembers)
 
-groupRouter.get('/:id', groupMessages)
+groupRouter.get('/:id/messages', groupMessages)
 
 groupRouter.post('/:groupId/user/:id/ban', banMember)
 
