@@ -14,12 +14,12 @@ datasource db {
 }
 
 enum AcademicLevel {
-  ONEHUNDRED
-  TWOHUNDRED
-  THREEHUNDRED
-  FOURHUNDRED
-  FIVEHUNDRED
-  SIXHUNDRED
+  ONE_HUNDRED
+  TWO_HUNDRED
+  THREE_HUNDRED
+  FOUR_HUNDRED
+  FIVE_HUNDRED
+  SIX_HUNDRED
 }
 
 enum GroupVisibility {
@@ -33,8 +33,10 @@ enum Role {
 }
 
 enum GroupStatus {
+  PENDING
   BANNED
   REMOVED
+  ACTIVE
 }
 
 model Faculty {
@@ -54,6 +56,7 @@ model Department {
 
 model User {
   id       String   @id @default(cuid())
+  name   String
   email     String   @unique
   faculty      Faculty @relation(fields: [facultyId], references: [id])
   department   Department @relation(fields: [departmentId], references: [id])
@@ -61,6 +64,7 @@ model User {
   departmentId  String
   createdAt DateTime @default(now())
   academicLevel AcademicLevel
+  groups GroupMember[]
   hashPassword String
   role Role
 }
@@ -77,16 +81,27 @@ model Group {
   visibility GroupVisibility
   description String
   messages Message[]
+  notifications Notification[]
+  members GroupMember[]
+}
+
+model Notification {
+  id  String @id @default(cuid())
+  group Group @relation(fields: [groupId], references: [id])
+  groupId String
 }
 
 model GroupMember {
   id String @id @default(cuid())
+  group Group @relation(fields: [groupId], references: [id])
   groupId String
+  user User @relation(fields: [userId], references: [id])
   userId String
   joined DateTime @default(now())
   role Role
   status GroupStatus
 }
+
 
 model Message {
   id String @id @default(cuid())

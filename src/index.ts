@@ -1,10 +1,19 @@
-import express from 'express'
+import express, { json, urlencoded } from 'express'
+import groupRouter from './user/routes/group'
+import userRouter from './user/routes/user'
+import messageRouter from './user/routes/message'
+import facultyRouter from './admin/routes/faculty'
+import departmentRouter from './admin/routes/department'
 
 const app = express()
 
-app.get('/', (req, res) => {
-    res.send("Yo!!")
-})
+app.use(json())
+
+app.use('/groups', groupRouter)
+app.use('/users', userRouter)
+app.use('/messages', messageRouter)
+app.use('/faculties', facultyRouter)
+app.use('/departments', departmentRouter)
 
 app.listen(3000, () => {
     console.log('Server started')
