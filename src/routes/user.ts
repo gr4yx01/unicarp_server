@@ -1,19 +1,21 @@
 import { Router } from "express";
-import { fetchUserGroups, joinGroup, loginUser, registerUser, accessGroup, promoteToPRO } from "../controllers/user";
+import { fetchUserGroups, joinGroup, accessGroup, promoteToPRO, demotePRO, allStudents } from "../controllers/user";
 import { isAdmin, isGroupMember } from "../middleware/user";
+import { verifyToken } from "../middleware/auth";
 
 const userRouter = Router()
 
-userRouter.post('/register', registerUser)
-
-userRouter.post('/login', loginUser)
+userRouter.get('/', verifyToken, isAdmin, allStudents)
 
 userRouter.get('/:id/groups', fetchUserGroups)
 
 userRouter.post('/:id/group/join', joinGroup)
 
-userRouter.get('/:userId/group/:groupId', isGroupMember, accessGroup)
+userRouter.get('/:userId/group/:groupId', verifyToken, isGroupMember, accessGroup)
 
-userRouter.get('/:id', isAdmin, promoteToPRO)
+userRouter.get('/:id/promote', verifyToken, isAdmin, promoteToPRO)
+
+userRouter.get('/:id/demote', verifyToken, isAdmin, demotePRO)
+
 
 export default userRouter;

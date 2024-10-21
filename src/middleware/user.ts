@@ -1,8 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../db";
 
-const isStudent = (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['user-role'] === 'STUDENT') {
+const isStudent = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req.userId
+        }
+    })
+    if (user?.role === 'STUDENT') {
         next()
     } else {
         res.status(401).json({
@@ -20,6 +25,7 @@ const isGroupMember = async (req: Request, res: Response, next: NextFunction) =>
             groupId
         }
     })
+    
     let message;
 
     switch(groupMember?.status) {
@@ -44,8 +50,13 @@ const isGroupMember = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 const isAdminOrPRO = (roles: any) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        if(roles.includes(req.headers['user-role'])) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: req.userId
+            }
+        })
+        if(roles.includes(user?.role)) {
             next()
         }else {
             res.status(401).json({
@@ -55,8 +66,13 @@ const isAdminOrPRO = (roles: any) => {
     }
 }
 
-const isPublicRelationOfficer = (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['user-role'] === 'PRO') {
+const isPublicRelationOfficer = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req?.userId
+        }
+    })
+    if (user?.role === 'PRO') {
         next()
     } else {
         res.status(401).json({
@@ -65,8 +81,13 @@ const isPublicRelationOfficer = (req: Request, res: Response, next: NextFunction
     }
 }
 
-const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-    if (req.headers['user-role'] === 'ADMIN') {
+const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req?.userId
+        }
+    })
+    if (user?.role === 'ADMIN') {
         next()
     } else {
         res.status(401).json({

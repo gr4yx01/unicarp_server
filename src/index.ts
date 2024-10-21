@@ -4,11 +4,17 @@ import userRouter from './routes/user'
 import messageRouter from './routes/message'
 import facultyRouter from './routes/faculty'
 import departmentRouter from './routes/department'
+import authRouter from './routes/auth'
+import dotenv from 'dotenv'
+import { verifyToken } from './middleware/auth'
+
+dotenv.config()
 
 const app = express()
 
 app.use(json())
 
+app.use('/auths', authRouter)
 app.use('/groups', groupRouter)
 app.use('/users', userRouter)
 app.use('/messages', messageRouter)

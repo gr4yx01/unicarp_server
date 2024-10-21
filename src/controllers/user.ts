@@ -1,48 +1,5 @@
 import { Request, Response } from "express"
 import { prisma } from "../db";
-import * as argon from "argon2";
-import userSchema from "../validator/user";
-
-const registerUser = async (req: Request, res: Response) => {
-    const { name, email, facultyId, departmentId, academicLevel, password } = req.body;
-
-    const { error } = userSchema.validate(req.body)
-
-    if(error) {
-        res.status(400).send({ message: error.details[0].message });
-        return;
-    }
-
-    try {
-
-        const hashPassword = await argon.hash(password)
-
-        const user = await prisma.user.create({
-            data: {
-                email,
-                hashPassword,
-                facultyId,
-                departmentId,
-                academicLevel,
-                name,
-                role: 'STUDENT'
-            }
-        })
-
-        res.status(201).json({
-            message: 'User created successfully',
-            data: user
-        })
-    } catch (err) {
-        res.status(500).json({
-            message: 'Internal server error'
-        })
-    }
-}
-
-const loginUser = (req: Request, res: Response) => {
-    res.send('group create')
-}
 
 const fetchUserGroups = async (req: Request, res: Response) => {
     const { id } = req.params
@@ -141,6 +98,22 @@ const accessGroup = async (req: Request, res: Response) => {
     }
 }
 
+const allStudents = async (req: Request, res: Response) => {
+    try {
+        const students = await prisma.user.findMany()
+
+        res.status(200).json({
+            message: 'student list',
+            data: students
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
+}
+
 const promoteToPRO = async (req: Request, res: Response) => {
     const { id } = req.params
 
@@ -165,11 +138,36 @@ const promoteToPRO = async (req: Request, res: Response) => {
     }
 }   
 
+const demotePRO = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                role: 'STUDENT'
+            }
+        })
+
+        res.status(200).json({
+            message: 'Successfully demoted'
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
+}   
+
+
 export {
     fetchUserGroups,
     joinGroup,
-    registerUser,
-    loginUser,
     accessGroup,
-    promoteToPRO
+    promoteToPRO,
+    demotePRO,
+    allStudents
 }

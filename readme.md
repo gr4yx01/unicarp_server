@@ -31,8 +31,8 @@ User registers
 - created_at
 - Group
 
-- implement registration
-- implement login
+- implement registration ✅
+- implement login ✅
 - PRO create group ✅
 - admin create faculty ✅
 - admin delete faculty ✅
@@ -56,7 +56,7 @@ User registers
 - PRO accept user request ✅
 - PRO reject user request ✅
 - admin assign PRO to user ✅
-- PRO edit group
-- PRO reassign user as group PRO
-- list all students
-- list all PROs
+- admin demote PRO to user ✅
+- PRO edit group ✅
+- list all students ✅
+- list all PROs ✅

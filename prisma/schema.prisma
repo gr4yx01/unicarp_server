@@ -30,6 +30,7 @@ enum GroupVisibility {
 enum Role {
   STUDENT
   PRO
+  ADMIN
 }
 
 enum GroupStatus {
