@@ -16,7 +16,7 @@ groupRouter.delete('/:id', isAdminOrPRO(["PRO", "ADMIN"]), deleteGroup)
 //enter group dashboard
 groupRouter.post('/', groupDashboard)
 
-groupRouter.put('/:id', editGroup)
+groupRouter.put('/:id', isPublicRelationOfficer, editGroup)
 
 //PRO
 groupRouter.get('/:id/members', isPublicRelationOfficer, groupMembers)
@@ -27,10 +27,10 @@ groupRouter.post('/:groupId/user/:id/ban', banMember)
 
 groupRouter.post('/:groupId/user/:id/remove', removeMember)
 
-groupRouter.get('/:id/request', membershipRequests)
+groupRouter.get('/:id/requests', isPublicRelationOfficer, membershipRequests)
 
-groupRouter.post('/:groupId/user/:id/accept', acceptRequest)
+groupRouter.post('/:groupId/user/:id/accept',isPublicRelationOfficer, acceptRequest)
 
-groupRouter.post('/:groupId/user/:id/reject', rejectRequest)
+groupRouter.post('/:groupId/user/:id/reject', isPublicRelationOfficer, rejectRequest)
 
 export default groupRouter;

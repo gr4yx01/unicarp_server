@@ -49,12 +49,13 @@ User registers
 - Student access group ✅
 - list group members ✅
 - PRO sends message ✅
-- PRO delete message 
-- list group messages
-- user request to join group
-- PRO accept user request
-- PRO reject user request
-- admin assign PRO to user
+- PRO delete message ✅
+- list group messages ✅
+- user request to join group ✅
+- groups requests ✅
+- PRO accept user request ✅
+- PRO reject user request ✅
+- admin assign PRO to user ✅
 - PRO edit group
 - PRO reassign user as group PRO
 - list all students

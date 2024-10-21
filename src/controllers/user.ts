@@ -141,10 +141,35 @@ const accessGroup = async (req: Request, res: Response) => {
     }
 }
 
+const promoteToPRO = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        await prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                role: 'PRO'
+            }
+        })
+
+        res.status(200).json({
+            message: 'Student has been promoted to PRO'
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
+}   
+
 export {
     fetchUserGroups,
     joinGroup,
     registerUser,
     loginUser,
-    accessGroup
+    accessGroup,
+    promoteToPRO
 }

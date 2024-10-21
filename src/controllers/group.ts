@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { request, Request, Response } from "express"
 import { prisma } from "../db"
 import groupSchema from "../validator/group";
 
@@ -41,8 +41,30 @@ const createGroup = async (req: Request, res: Response) => {
     }
 }
 
-const editGroup = (req: Request, res: Response) => {
-    res.send('group create')
+const editGroup = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const { name, description } = req.body
+
+    try {
+        await prisma.group.update({
+            where: {
+                id,
+            },
+            data: {
+                name,
+                description
+            }
+        })
+        
+        res.status(200).json({
+            message: 'successfully updated'
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
 const deleteGroup = async (req: Request, res: Response) => {
@@ -120,8 +142,29 @@ const groupMembers = async (req: Request, res: Response) => {
    }
 }
 
-const groupMessages = (req: Request, res: Response) => {
-    res.send('group create')
+const groupMessages = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        const group = await prisma.group.findUnique({
+            where: {
+                id
+            },
+            include: {
+                messages: true
+            }
+        })
+
+        res.status(200).json({
+            message: 'Group message',
+            data: group?.messages
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
 
@@ -134,18 +177,89 @@ const removeMember = (req: Request, res: Response) => {
     res.send('group create')
 }
 
-const membershipRequests = (req: Request, res: Response) => {
-    res.send('group create')
+const membershipRequests = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        const requests = await prisma.groupMember.findMany({
+            where: {
+                groupId: id,
+                status: 'PENDING'
+            }
+        })
+
+        res.status(200).json({
+            message: 'list of requests',
+            data: requests
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
+const acceptRequest = async (req: Request, res: Response) => {
+    const { id, groupId } = req.params
 
-const acceptRequest = (req: Request, res: Response) => {
-    res.send('group create')
+    try {
+        const requestExist = await prisma.groupMember.findFirst({
+            where: {
+                groupId,
+                userId: id
+            }
+        })
+
+
+        const member = await prisma.groupMember.update({
+            where: {
+                id: requestExist?.id
+            },
+            data: {
+                status: 'ACTIVE'
+            }
+        })
+
+        res.status(200).json({
+            message: 'Request accepted',
+            data: member
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
+const rejectRequest = async (req: Request, res: Response) => {
+    const { id, groupId } = req.params
 
-const rejectRequest = (req: Request, res: Response) => {
-    res.send('group create')
+    try {
+        const requestExist = await prisma.groupMember.findFirst({
+            where: {
+                groupId,
+                userId: id
+            }
+        })
+
+        const member = await prisma.groupMember.delete({
+            where: {
+                id: requestExist?.id
+            }
+        })
+
+        res.status(200).json({
+            message: 'Request rejected',
+            data: member
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
 
