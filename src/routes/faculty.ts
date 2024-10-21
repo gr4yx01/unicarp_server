@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { createFaculty, getAllFaculty, getFacultyDepartments } from '../controllers/faculty'
-import { isPublicRelationOfficer } from '../../middleware/user'
+import { isAdmin, isPublicRelationOfficer } from '../middleware/user'
 
 const facultyRouter = Router()
 
-facultyRouter.post('/', isPublicRelationOfficer, createFaculty)
+facultyRouter.post('/', isAdmin, createFaculty)
 
 facultyRouter.get('/:id', getFacultyDepartments)
 

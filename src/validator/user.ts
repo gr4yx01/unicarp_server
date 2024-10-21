@@ -6,8 +6,7 @@ const userSchema = Joi.object().keys({
     facultyId: Joi.string().required(),
     departmentId: Joi.string().required(),
     academicLevel: Joi.string().required(),
-    password: Joi.string().required(),
-    role: Joi.string().required()
+    password: Joi.string().required()
 })
 
 export default userSchema

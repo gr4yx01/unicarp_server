@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../db";
+import { prisma } from "../db";
 
 const getAllFaculty = async (req: Request, res: Response) => {
     try {
@@ -37,6 +37,21 @@ const getFacultyDepartments = async (req: Request, res: Response) => {
     }
 }
 
+const deleteFaculty = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        await prisma.faculty.delete({
+            where: {
+                id
+            }
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
 
 const createFaculty = async (req: Request, res: Response) => {
     const body = req.body
@@ -62,5 +77,6 @@ const createFaculty = async (req: Request, res: Response) => {
 export {
     getAllFaculty,
     createFaculty,
-    getFacultyDepartments
+    getFacultyDepartments,
+    deleteFaculty
 }

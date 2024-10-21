@@ -1,24 +1,25 @@
 import { Router } from "express";
 import { acceptRequest, banMember, createGroup, deleteGroup, editGroup, fetchGroups, groupDashboard, groupMembers, groupMessages, membershipRequests, rejectRequest, removeMember } from "../controllers/group";
-import { isPublicRelationOfficer } from "../../middleware/user";
+import { isAdmin, isAdminOrPRO, isPublicRelationOfficer } from "../middleware/user";
 
 const groupRouter = Router()
 
 //create group
 groupRouter.post('/', isPublicRelationOfficer,  createGroup)
 
+//discovery group
+groupRouter.get('/', fetchGroups)
+
+// delete group
+groupRouter.delete('/:id', isAdminOrPRO(["PRO", "ADMIN"]), deleteGroup)
+
 //enter group dashboard
 groupRouter.post('/', groupDashboard)
 
 groupRouter.put('/:id', editGroup)
 
-//discovery group
-groupRouter.get('/', fetchGroups)
-
-groupRouter.delete('/:id', deleteGroup)
-
 //PRO
-groupRouter.get('/:id/members', groupMembers)
+groupRouter.get('/:id/members', isPublicRelationOfficer, groupMembers)
 
 groupRouter.get('/:id/messages', groupMessages)
 

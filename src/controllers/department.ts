@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "../../db";
+import { prisma } from "../db";
 
 const createDepartment = async (req: Request, res: Response) => {
     const { name, facultyId } = req.body
@@ -39,7 +39,25 @@ const createDepartment = async (req: Request, res: Response) => {
 }
 
 
-const deleteDepartment = (req: Request, res: Response) => {
+const deleteDepartment = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        await prisma.department.delete({
+            where: {
+                id
+            }
+        })
+
+        res.status(200).json({
+            message: 'Successfully deleted',
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
     res.send('delete department')
 }
 

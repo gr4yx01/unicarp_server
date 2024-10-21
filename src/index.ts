@@ -1,9 +1,9 @@
 import express, { json, urlencoded } from 'express'
-import groupRouter from './user/routes/group'
-import userRouter from './user/routes/user'
-import messageRouter from './user/routes/message'
-import facultyRouter from './admin/routes/faculty'
-import departmentRouter from './admin/routes/department'
+import groupRouter from './routes/group'
+import userRouter from './routes/user'
+import messageRouter from './routes/message'
+import facultyRouter from './routes/faculty'
+import departmentRouter from './routes/department'
 
 const app = express()
 

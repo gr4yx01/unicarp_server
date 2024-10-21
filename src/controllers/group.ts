@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
-import { prisma } from "../../db"
-import groupSchema from "../../validator/group";
+import { prisma } from "../db"
+import groupSchema from "../validator/group";
 
 const createGroup = async (req: Request, res: Response) => {
     const {name, description, visibility, userId } = req.body
@@ -45,8 +45,25 @@ const editGroup = (req: Request, res: Response) => {
     res.send('group create')
 }
 
-const deleteGroup = (req: Request, res: Response) => {
-    res.send('group create')
+const deleteGroup = async (req: Request, res: Response) => {
+    const { id } = req.params
+
+    try {
+        await prisma.group.delete({
+            where: {
+                id
+            },
+        })
+
+        res.status(200).json({
+            message: 'Group deleted successfully'
+        })
+    } catch(err) {
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
 }
 
 const fetchGroups = async (req: Request, res: Response) => {
@@ -73,12 +90,34 @@ const fetchGroups = async (req: Request, res: Response) => {
     }
 }
 
-const groupDashboard = (req: Request, res: Response) => {
+const groupDashboard = async (req: Request, res: Response) => {
     res.send('group create')
 }
 
-const groupMembers = (req: Request, res: Response) => {
-    res.send('group create')
+const groupMembers = async (req: Request, res: Response) => {
+   const { id } = req.params
+
+   try {
+        const group = await prisma.group.findUnique({
+            where: {
+                id
+            },
+            include: {
+                members: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        })
+
+        res.status(200).json(group?.members)
+   } catch(err) {
+    res.status(500).json({
+        message: 'Internal server error',
+        error: err
+    })
+   }
 }
 
 const groupMessages = (req: Request, res: Response) => {
