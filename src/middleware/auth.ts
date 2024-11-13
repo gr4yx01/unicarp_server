@@ -13,14 +13,12 @@ dotenv.config()
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
 
-    const token = req.header('Authorization');
+    const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) {
-  
       res.status(401).send('Access Denied');
-  
+
       return;
-  
     }
   
     try {
@@ -36,7 +34,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
             next();
         }
     } catch (err) {
-  
       res.status(400).send('Invalid Token');
   
     }

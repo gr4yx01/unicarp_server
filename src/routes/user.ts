@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { fetchUserGroups, joinGroup, accessGroup, promoteToPRO, demotePRO, allStudents } from "../controllers/user";
+import { fetchUserGroups, joinGroup, accessGroup, promoteToPRO, demotePRO, allStudents, getUserProfile } from "../controllers/user";
 import { isAdmin, isGroupMember } from "../middleware/user";
 import { verifyToken } from "../middleware/auth";
 
 const userRouter = Router()
+
+userRouter.get('/profile', verifyToken, getUserProfile)
 
 userRouter.get('/', verifyToken, isAdmin, allStudents)
 

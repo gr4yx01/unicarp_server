@@ -1,0 +1,170 @@
+[
+    {
+      "name": "Faculty of Agriculture",
+      "departments": [
+        "Agricultural Economics and Extension",
+        "Animal Science",
+        "Crop Science",
+        "Soil Science",
+        "Food Science and Technology",
+        "Forestry and Wildlife Management"
+      ]
+    },
+    {
+      "name": "Faculty of Arts",
+      "departments": [
+        "English and Literary Studies",
+        "History and International Studies",
+        "Linguistics, Igbo and Other Nigerian Languages",
+        "Philosophy",
+        "Theatre and Film Studies",
+        "Religion and Cultural Studies"
+      ]
+    },
+    {
+      "name": "Faculty of Biological Sciences",
+      "departments": [
+        "Biochemistry",
+        "Biology",
+        "Botany",
+        "Microbiology",
+        "Zoology"
+      ]
+    },
+    {
+      "name": "Faculty of Business Administration",
+      "departments": [
+        "Accounting",
+        "Banking and Finance",
+        "Business Management",
+        "Marketing",
+        "Entrepreneurship"
+      ]
+    },
+    {
+      "name": "Faculty of Education",
+      "departments": [
+        "Adult and Non-Formal Education",
+        "Educational Foundations",
+        "Guidance and Counselling",
+        "Health and Physical Education",
+        "Social Science Education",
+        "Science Education",
+        "Technology Education",
+        "Special Education",
+        "Arts Education"
+      ]
+    },
+    {
+      "name": "Faculty of Engineering",
+      "departments": [
+        "Civil Engineering",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+        "Chemical Engineering",
+        "Computer Engineering",
+        "Agricultural Engineering"
+      ]
+    },
+    {
+      "name": "Faculty of Health Sciences and Technology",
+      "departments": [
+        "Medical Laboratory Science",
+        "Nursing Science",
+        "Radiography",
+        "Public Health",
+        "Health Administration and Planning"
+      ]
+    },
+    {
+      "name": "Faculty of Law",
+      "departments": [
+        "Commercial and Industrial Law",
+        "Public Law",
+        "Private Law",
+        "International Law",
+        "Jurisprudence and Legal Theory"
+      ]
+    },
+    {
+      "name": "Faculty of Medical Sciences",
+      "departments": [
+        "Medicine and Surgery",
+        "Human Anatomy",
+        "Human Physiology",
+        "Obstetrics and Gynaecology",
+        "Paediatrics",
+        "Pathology",
+        "Pharmacology",
+        "Surgery",
+        "Community Medicine"
+      ]
+    },
+    {
+      "name": "Faculty of Pharmaceutical Sciences",
+      "departments": [
+        "Pharmaceutical Chemistry",
+        "Pharmacognosy",
+        "Pharmacology and Therapeutics",
+        "Pharmaceutics and Pharmaceutical Technology",
+        "Clinical Pharmacy"
+      ]
+    },
+    {
+      "name": "Faculty of Physical Sciences",
+      "departments": [
+        "Chemistry",
+        "Computer Science",
+        "Geology",
+        "Mathematics",
+        "Physics",
+        "Statistics"
+      ]
+    },
+    {
+      "name": "Faculty of Social Sciences",
+      "departments": [
+        "Economics",
+        "Geography",
+        "Political Science",
+        "Psychology",
+        "Sociology and Anthropology",
+        "Social Work"
+      ]
+    },
+    {
+      "name": "Faculty of Veterinary Medicine",
+      "departments": [
+        "Veterinary Anatomy",
+        "Veterinary Medicine",
+        "Veterinary Microbiology",
+        "Veterinary Parasitology and Entomology",
+        "Veterinary Pathology",
+        "Veterinary Physiology and Pharmacology",
+        "Veterinary Public Health and Preventive Medicine",
+        "Veterinary Surgery and Radiology"
+      ]
+    },
+    {
+      "name": "Faculty of Environmental Studies",
+      "departments": [
+        "Environmental Management",
+        "Urban and Regional Planning",
+        "Surveying and Geoinformatics",
+        "Building",
+        "Estate Management",
+        "Geography and Meteorology"
+      ]
+    },
+    {
+      "name": "Faculty of Humanities and Social Sciences",
+      "departments": [
+        "Anthropology",
+        "Sociology",
+        "Political Science",
+        "International Relations",
+        "Public Administration",
+        "Mass Communication"
+      ]
+    }
+  ]

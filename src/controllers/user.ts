@@ -162,6 +162,24 @@ const demotePRO = async (req: Request, res: Response) => {
     }
 }   
 
+const getUserProfile = async (req: Request, res: Response) => {
+    try {
+        const userProfile = await prisma.user.findUnique({
+            where: {
+                id: req.userId
+            }
+        })
+
+        res.status(200).json({
+            message: 'user profile',
+            data: userProfile
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
 
 export {
     fetchUserGroups,
@@ -169,5 +187,6 @@ export {
     accessGroup,
     promoteToPRO,
     demotePRO,
-    allStudents
+    allStudents,
+    getUserProfile
 }

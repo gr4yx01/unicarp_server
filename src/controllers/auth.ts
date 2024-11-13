@@ -3,6 +3,7 @@ import userSchema from "../validator/user";
 import * as argon from 'argon2'
 import { prisma } from "../db";
 import jwt from "jsonwebtoken";
+import { HttpStatusCode } from "axios";
 
 const registerUser = async (req: Request, res: Response) => {
     const { name, email, facultyId, departmentId, academicLevel, password } = req.body;
@@ -15,7 +16,6 @@ const registerUser = async (req: Request, res: Response) => {
     }
 
     try {
-        // check if user exist
         const emailExists = await prisma.user.findFirst({
             where: {
                 email
@@ -31,37 +31,41 @@ const registerUser = async (req: Request, res: Response) => {
 
         const hashPassword = await argon.hash(password)
 
-        const user = await prisma.user.create({
-            data: {
-                email,
-                hashPassword,
-                facultyId,
-                departmentId,
-                academicLevel,
-                name,
-                role: 'STUDENT'
-            }
-        })
-
-        const data = {
-            name,
-            userId: user.id,
-            hashPassword,
-        }
-
         const secret = process.env.JWT_SECRET;
-        if (!secret) {
-            throw new Error("JWT_SECRET is not defined");
-        }
-        const token = jwt.sign(data, secret, {
-            expiresIn: '3h'
-        });
 
-        res.status(201).json({
-            message: 'User created successfully',
-            // data: user
-            data: token
-        })
+        if(secret) {
+            const user = await prisma.user.create({
+                data: {
+                    email,
+                    hashPassword,
+                    facultyId,
+                    departmentId,
+                    academicLevel,
+                    name,
+                    role: 'STUDENT'
+                }
+            })
+    
+            const data = {
+                name,
+                userId: user.id,
+                hashPassword,
+            }
+    
+            // if (!secret) {
+            //     throw new Error("JWT_SECRET is not defined");
+            // }
+
+            const token = jwt.sign(data, secret, {
+                expiresIn: '3h'
+            });
+
+            res.status(201).json({
+                message: 'User created successfully',
+                // data: user
+                data: token
+            })
+        }
     } catch (err) {
         res.status(500).json({
             message: 'Internal server error',
@@ -71,7 +75,9 @@ const registerUser = async (req: Request, res: Response) => {
 }
 
 const loginUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body
+    const { email, password, role } = req.body
+
+    console.log(req.body)
 
     try {
         const userExist = await prisma.user.findFirst({
@@ -82,17 +88,25 @@ const loginUser = async (req: Request, res: Response) => {
 
         if(!userExist) {
             res.status(404).json({
-                message: 'No account found'
+                message: "You don't have an account"
             })
             return;
         }
 
-    const isVerified = argon.verify(userExist?.hashPassword, password)
+        if( role === 'PRO' && userExist.role === 'STUDENT') {
+            res.status(401).json({
+                message: "You can't login as a public relation officer"
+            })
+            return;
+        }
+
+    const isVerified = await argon.verify(userExist?.hashPassword, password)
 
     if(!isVerified) {
-        res.status(404).json({
+        res.status(HttpStatusCode.Unauthorized).json({
             message: 'Incorrect password'
         })
+        return;
     }
 
     const data = {

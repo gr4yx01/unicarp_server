@@ -6,13 +6,14 @@ import facultyRouter from './routes/faculty'
 import departmentRouter from './routes/department'
 import authRouter from './routes/auth'
 import dotenv from 'dotenv'
-import { verifyToken } from './middleware/auth'
+import cors from 'cors'
 
 dotenv.config()
 
 const app = express()
 
 app.use(json())
+app.use(cors())
 
 app.use('/auths', authRouter)
 app.use('/groups', groupRouter)

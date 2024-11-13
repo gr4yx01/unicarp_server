@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../db";
+import data from '../data/facultiesDeptUNN.json'
 
 const getAllFaculty = async (req: Request, res: Response) => {
     try {
@@ -54,18 +55,28 @@ const deleteFaculty = async (req: Request, res: Response) => {
 }
 
 const createFaculty = async (req: Request, res: Response) => {
-    const body = req.body
 
     try {
-        const faculty = await prisma.faculty.create({
-            data: {
-                name: body.name,
-            }
+
+        data.forEach(async (faculty: any) => {
+            const createdFaculty = await prisma.faculty.create({
+                data: {
+                    name: faculty.name
+                }
+            })
+
+            faculty.departments.forEach(async (department: any) => {
+                await prisma.department.create({
+                    data: {
+                        name: department,
+                        facultyId: createdFaculty.id
+                    }
+                })
+            })
         })
 
         res.status(201).json({
-            message: 'Faculty created successfully',
-            data: faculty
+            message: 'Faculty and departments created successfully',
         })
     }catch (err) {
         res.status(500).json({

@@ -44,6 +44,7 @@ model Faculty {
   id String @id @default(cuid())
   name String
   users User[]
+  groups Group[]
   departments Department[]
 }
 
@@ -51,10 +52,10 @@ model Department {
   id String @id @default(cuid())
   name String
   users User[]
+  groups Group[]
   faculty Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
   facultyId String
 }
-
 
 model Admin {
   id  String  @id @default(cuid())
@@ -82,6 +83,11 @@ model Group {
   name String @unique
   visibility GroupVisibility @default(PUBLIC)
   description String
+  faculty Faculty? @relation(fields: [facultyId], references: [id])
+  facultyId String?
+  department Department? @relation(fields: [departmentId], references: [id])
+  departmentId String?
+  level AcademicLevel?
   messages Message[]
   notifications Notification[]
   members GroupMember[]
@@ -103,8 +109,6 @@ model Notification {
   group Group @relation(fields: [groupId], references: [id])
   groupId String
 }
-
-
 
 model Message {
   id String @id @default(cuid())
