@@ -112,8 +112,9 @@ model Notification {
 
 model Message {
   id String @id @default(cuid())
-  text String
-  created_at DateTime @default(now())
-  group Group @relation(fields: [groupId], references: [id])
+  title String
+  description String
+  created_at DateTime @updatedAt
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId String
 }

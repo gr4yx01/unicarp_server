@@ -12,7 +12,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
-
     const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) {
@@ -22,14 +21,13 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
     }
   
     try {
-        
         const secret = process.env.JWT_SECRET
         if(!secret) {
             res.status(404).json({
                 message: 'Jwt secret not found'
             })
         }else {
-            const verified = jwt.verify(token, secret);
+          const verified = jwt.verify(token, secret);
             req.userId = (verified as jwt.JwtPayload)?.userId
             next();
         }
@@ -37,7 +35,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
       res.status(400).send('Invalid Token');
   
     }
-  
   };
 
   export {

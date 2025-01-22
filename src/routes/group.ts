@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { acceptRequest, banMember, createGroup, deleteGroup, editGroup, fetchGroups, groupDashboard, groupMembers, groupMessages, membershipRequests, rejectRequest, removeMember } from "../controllers/group";
-import { isAdmin, isAdminOrPRO, isPublicRelationOfficer } from "../middleware/user";
+import { acceptRequest, banMember, createGroup, deleteGroup, editGroup, fetchGroups, groupDashboard, groupMembers, groupMessages, membershipRequests, rejectRequest, removeMember, restoreMember } from "../controllers/group";
+import { isAdminOrPRO, isGroupMember, isPublicRelationOfficer } from "../middleware/user";
 import { verifyToken } from "../middleware/auth";
 
 const groupRouter = Router()
@@ -24,14 +24,16 @@ groupRouter.get('/:id/members', verifyToken, isPublicRelationOfficer, groupMembe
 
 groupRouter.get('/:id/messages', groupMessages)
 
-groupRouter.post('/:groupId/user/:id/ban', banMember)
+groupRouter.put('/:groupId/user/:id/ban', verifyToken, isGroupMember, banMember)
 
-groupRouter.post('/:groupId/user/:id/remove', removeMember)
+groupRouter.put('/:groupId/user/:id/unban', verifyToken, isPublicRelationOfficer, restoreMember)
+
+groupRouter.put('/:groupId/user/:id/remove', removeMember)
 
 groupRouter.get('/:id/requests', verifyToken, isPublicRelationOfficer, membershipRequests)
 
-groupRouter.post('/:groupId/user/:id/accept', verifyToken, isPublicRelationOfficer, acceptRequest)
+groupRouter.put('/:groupId/user/:id/accept', verifyToken, isPublicRelationOfficer, acceptRequest)
 
-groupRouter.post('/:groupId/user/:id/reject', verifyToken, isPublicRelationOfficer, rejectRequest)
+groupRouter.put('/:groupId/user/:id/reject', verifyToken, isPublicRelationOfficer, rejectRequest)
 
 export default groupRouter;

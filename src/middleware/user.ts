@@ -56,6 +56,7 @@ const isAdminOrPRO = (roles: any) => {
                 id: req.userId
             }
         })
+
         if(roles.includes(user?.role)) {
             next()
         }else {

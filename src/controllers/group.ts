@@ -3,22 +3,22 @@ import { prisma } from "../db"
 import groupSchema from "../validator/group";
 
 const createGroup = async (req: Request, res: Response) => {
-    const {name, description, visibility, userId } = req.body
+    const userId = req.userId as string;
+    
     const { error } = groupSchema.validate(req.body);
 
     if(error) {
         res.status(400).send({ message: error.details[0].message });
         return;
     }
-
+    
     try {
         const group = await prisma.group.create({
             data: {
-                name,
-                description,
-                visibility
+                ...req.body
             }
         })
+
 
         await prisma.groupMember.create({
             data: {
@@ -34,6 +34,7 @@ const createGroup = async (req: Request, res: Response) => {
             data: group
         })
     }catch(err) {
+        console.log(err);
         res.status(500).json({
             message: 'Internal server error',
             error: err
@@ -71,16 +72,25 @@ const deleteGroup = async (req: Request, res: Response) => {
     const { id } = req.params
 
     try {
-        await prisma.group.delete({
-            where: {
+        await prisma.$transaction([
+            prisma.group.delete({
+              where: {
                 id
-            },
-        })
+              },
+            }),
+            
+            prisma.groupMember.deleteMany({
+                where: {
+                  groupId: id,
+                },
+              })
+          ]);
 
         res.status(200).json({
             message: 'Group deleted successfully'
         })
     } catch(err) {
+        console.log(err)
         res.status(500).json({
             message: 'Internal server error',
             error: err
@@ -151,7 +161,11 @@ const groupMessages = async (req: Request, res: Response) => {
                 id
             },
             include: {
-                messages: true
+                messages: {
+                    orderBy: {
+                        created_at: 'desc' // Sort messages by the created_at field in descending order
+                    },
+                }
             }
         })
 
@@ -192,6 +206,39 @@ const banMember = async (req: Request, res: Response) => {
             message: 'User banned',
         })
     } catch(err) {
+        console.log(err)
+        res.status(500).json({
+            message: 'Internal server error',
+            error: err
+        })
+    }
+}
+
+const restoreMember = async (req: Request, res: Response) => {
+    const { id, groupId } = req.params
+
+    try {
+        const memberExist = await prisma.groupMember.findFirst({
+            where: {
+                userId: id,
+                groupId
+            }
+        })
+
+        await prisma.groupMember.update({
+            where: {
+                id: memberExist?.id
+            },
+            data: {
+                status: 'ACTIVE'
+            }
+        })
+
+        res.status(200).json({
+            message: 'User Restored'
+        })
+    } catch(err) {
+        console.log(err)
         res.status(500).json({
             message: 'Internal server error',
             error: err
@@ -328,5 +375,6 @@ export {
     removeMember,
     membershipRequests,
     acceptRequest,
-    rejectRequest
+    rejectRequest,
+    restoreMember
 }

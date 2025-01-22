@@ -8,6 +8,18 @@ const fetchUserGroups = async (req: Request, res: Response) => {
         const groups = await  prisma.groupMember.findMany({
             where: {
                 userId: id
+            },
+            include: {
+                group: {
+                    include: {
+                        members: {
+                            include: {
+                                user: true
+                            }
+                        },
+                        messages: true
+                    }
+                }
             }
         })
 
@@ -19,6 +31,28 @@ const fetchUserGroups = async (req: Request, res: Response) => {
         res.status(500).json({
             message: 'Internal server error',
             error: err
+        })
+    }
+}
+
+const updateProfile = async (req: Request, res: Response) => {
+    try {
+        const response = await prisma.user.update({
+            where: {
+                id: req.userId
+            },
+            data: {
+                ...req.body
+            }
+        })
+
+        res.status(200).json({
+            message: 'Profile updated successfully',
+            data: response
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: err
         })
     }
 }
@@ -188,5 +222,6 @@ export {
     promoteToPRO,
     demotePRO,
     allStudents,
-    getUserProfile
+    getUserProfile,
+    updateProfile
 }

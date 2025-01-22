@@ -9,4 +9,6 @@ messageRouter.post('/', verifyToken, isPublicRelationOfficer, createMessage)
 
 messageRouter.delete('/:id', verifyToken, isAdminOrPRO(['PRO', 'ADMIN']), deleteMesssage)
 
+messageRouter.put('/:id', verifyToken, isAdminOrPRO(['PRO', 'ADMIN']), editMessage)
+
 export default messageRouter

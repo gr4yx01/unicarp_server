@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchUserGroups, joinGroup, accessGroup, promoteToPRO, demotePRO, allStudents, getUserProfile } from "../controllers/user";
+import { fetchUserGroups, joinGroup, accessGroup, promoteToPRO, demotePRO, allStudents, getUserProfile, updateProfile } from "../controllers/user";
 import { isAdmin, isGroupMember } from "../middleware/user";
 import { verifyToken } from "../middleware/auth";
 
@@ -7,7 +7,7 @@ const userRouter = Router()
 
 userRouter.get('/profile', verifyToken, getUserProfile)
 
-userRouter.get('/', verifyToken, isAdmin, allStudents)
+userRouter.put('/profile', verifyToken, updateProfile)
 
 userRouter.get('/:id/groups', fetchUserGroups)
 

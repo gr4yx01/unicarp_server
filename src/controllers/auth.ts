@@ -33,6 +33,8 @@ const registerUser = async (req: Request, res: Response) => {
 
         const secret = process.env.JWT_SECRET;
 
+        console.log(secret)
+
         if(secret) {
             const user = await prisma.user.create({
                 data: {
@@ -45,16 +47,12 @@ const registerUser = async (req: Request, res: Response) => {
                     role: 'STUDENT'
                 }
             })
-    
+
             const data = {
                 name,
                 userId: user.id,
                 hashPassword,
-            }
-    
-            // if (!secret) {
-            //     throw new Error("JWT_SECRET is not defined");
-            // }
+            }   
 
             const token = jwt.sign(data, secret, {
                 expiresIn: '3h'
@@ -62,7 +60,6 @@ const registerUser = async (req: Request, res: Response) => {
 
             res.status(201).json({
                 message: 'User created successfully',
-                // data: user
                 data: token
             })
         }
@@ -117,9 +114,11 @@ const loginUser = async (req: Request, res: Response) => {
 
     const secret = process.env.JWT_SECRET
 
+    console.log(secret)
+
     if(secret) {
         const token = jwt.sign(data,secret, {
-            expiresIn: '3h'
+            expiresIn: '1h'
         })
 
         res.status(200).json({
