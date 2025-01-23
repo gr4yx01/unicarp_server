@@ -57,13 +57,23 @@ const isAdminOrPRO = (roles: any) => {
             }
         })
 
-        if(roles.includes(user?.role)) {
+        const admin = await prisma.admin.findUnique({
+            where: {
+                id: req.userId
+            }
+        })
+
+        if(roles.includes(user?.role) && !admin) {
             next()
-        }else {
-            res.status(401).json({
-                message: 'Unauthorised'
-            })
         }
+
+        if(admin) {
+            next()
+        }
+
+        res.status(401).json({
+            message: 'Unauthorised'
+        })
     }
 }
 
@@ -83,12 +93,12 @@ const isPublicRelationOfficer = async (req: Request, res: Response, next: NextFu
 }
 
 const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.admin.findUnique({
         where: {
             id: req?.userId
         }
     })
-    if (user?.role === 'ADMIN') {
+    if (user) {
         next()
     } else {
         res.status(401).json({

@@ -134,7 +134,13 @@ const accessGroup = async (req: Request, res: Response) => {
 
 const allStudents = async (req: Request, res: Response) => {
     try {
-        const students = await prisma.user.findMany()
+        const students = await prisma.user.findMany({
+            include: {
+                faculty: true,
+                department: true,
+                
+            }
+        })
 
         res.status(200).json({
             message: 'student list',

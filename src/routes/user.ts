@@ -15,9 +15,10 @@ userRouter.post('/:id/group/join', joinGroup)
 
 userRouter.get('/:userId/group/:groupId', verifyToken, isGroupMember, accessGroup)
 
-userRouter.get('/:id/promote', verifyToken, isAdmin, promoteToPRO)
+userRouter.put('/:id/promote', verifyToken, isAdmin, promoteToPRO)
 
-userRouter.get('/:id/demote', verifyToken, isAdmin, demotePRO)
+userRouter.put('/:id/demote', verifyToken, isAdmin, demotePRO)
 
+userRouter.get('/students', verifyToken, isAdmin, allStudents)
 
 export default userRouter;

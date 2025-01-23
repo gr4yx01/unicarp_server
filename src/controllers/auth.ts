@@ -55,7 +55,7 @@ const registerUser = async (req: Request, res: Response) => {
             }   
 
             const token = jwt.sign(data, secret, {
-                expiresIn: '3h'
+                expiresIn: '10h'
             });
 
             res.status(201).json({
@@ -118,7 +118,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     if(secret) {
         const token = jwt.sign(data,secret, {
-            expiresIn: '1h'
+            expiresIn: '10h'
         })
 
         res.status(200).json({
@@ -133,7 +133,109 @@ const loginUser = async (req: Request, res: Response) => {
     }
 }
 
+const adminRegister = async (req: Request, res: Response) => {
+    const { email, password } = req.body
+
+    try {
+        const emailExist = await prisma.admin.findFirst({
+            where: {
+                email
+            }
+        })
+
+        if(emailExist) {
+            res.status(409).json({
+                message: 'User with email already exist'
+            })
+            return;
+        }
+
+        const hashPassword = await argon.hash(password)
+
+        const secret = process.env.JWT_SECRET
+
+        if(secret) {
+            const user = await prisma.admin.create({
+                data: {
+                    email,
+                    hashPassword,
+                }
+            })
+
+            const data = {
+                userId: user.id,
+                password: user.hashPassword
+            }
+
+            const token = jwt.sign(data, secret, {
+                expiresIn: '10h'
+            })
+
+            res.status(201).json({
+                message: 'Admin created successfully',
+                data: token
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
+const adminLogin = async (req: Request, res: Response) =>  {
+    const { email, password } = req.body
+
+    try {
+        const userExist = await prisma.admin.findFirst({
+            where: {
+                email
+            }
+        })
+
+        if(!userExist) {
+            res.status(404).json({
+                message: "You don't have an account"
+            })
+            return;
+        }
+
+        const isVerified = await argon.verify(userExist?.hashPassword, password)
+
+        if(!isVerified) {
+            res.status(HttpStatusCode.Unauthorized).json({
+                message: 'Incorrect password'
+            })
+            return;
+        }
+
+        const data = {
+            userId: userExist?.id,
+            password: userExist?.hashPassword
+        }
+
+        const secret = process.env.JWT_SECRET
+
+        if(secret) {
+            const token = jwt.sign(data, secret, {
+                expiresIn: '10h'
+            })
+
+            res.status(200).json({
+                message: 'Login successful',
+                data: token
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+    }
+}
+
 export {
     registerUser,
-    loginUser
+    loginUser,
+    adminLogin,
+    adminRegister
 }
